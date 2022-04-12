@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Models\Category;
 use App\Models\Product;
 
 class ProductController extends Controller
@@ -54,6 +55,13 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         //
+        $categories = collect(Category::all());
+        foreach ($categories as $category) {
+            $category->products = $category->products;
+        }
+        return $this->respondWithSuccess([
+            'category' => $categories,
+        ]);
     }
 
     /**
