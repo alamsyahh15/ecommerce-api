@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AddressController;
+use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\DistrictController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProvinceController;
@@ -43,12 +44,24 @@ Route::prefix('address')->group(function () {
     Route::get('/regencies/{id?}', [RegencyController::class, 'index']);
     Route::get('/districts/{id?}', [DistrictController::class, 'index']);
     Route::get('/villages/{id?}', [VillageController::class, 'index']);
-    Route::post('/update', [AddressController::class, 'update']);
-    Route::post('/delete', [AddressController::class, 'destroy']);
+    Route::middleware('auth:users')->group(function () {
+        Route::post('/update', [AddressController::class, 'update']);
+        Route::post('/delete', [AddressController::class, 'destroy']);
+    });
 });
 
 
 
 Route::prefix('products')->group(function () {
     Route::get('/', [ProductController::class, 'index']);
+    Route::get('/with-category', [ProductController::class, 'show']);
+});
+
+Route::prefix('cart')->group(function () {
+    Route::middleware('auth:users')->group(function () {
+        Route::get('/', [CartController::class, 'index']);
+        Route::post('/add', [CartController::class, 'store']);
+        Route::post('/update-qty', [CartController::class, 'update']);
+        Route::post('/delete', [CartController::class, 'destroy']);
+    });
 });

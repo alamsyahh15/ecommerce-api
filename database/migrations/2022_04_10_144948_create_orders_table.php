@@ -18,7 +18,7 @@ class CreateOrdersTable extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->string('trx_code')->unique();
-            $table->integer('status_order')->default(StatusOrder::UNPAID)->comment('1 = Paid, 2 = Unpaid');
+            $table->integer('status_order')->default(StatusOrder::UNPAID)->comment('1 = Unpaid, 2 = Paid');
             $table->integer('status_shipping')->default(StatusOrder::INITIAL)->comment('1 = Init, 2 = Progress, 3 = Complete');
             $table->timestamps();
         });

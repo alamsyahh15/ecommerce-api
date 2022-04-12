@@ -13,7 +13,7 @@ class OrderProduct extends Model
 
     public function order()
     {
-        return $this->belongsTo(Order::class);
+        return $this->belongsTo(Order::class, 'trx_code_order', 'trx_code');
     }
 
     public function product()

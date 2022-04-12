@@ -8,6 +8,6 @@ class StatusOrder
     const PROGRESS = 2;
     const COMPLETE = 3;
 
-    const PAID = 1;
-    const UNPAID = 2;
+    const UNPAID = 1;
+    const PAID = 2;
 }

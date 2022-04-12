@@ -15,8 +15,10 @@ class CreateOrderProductsTable extends Migration
     {
         Schema::create('order_products', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_id');
+            $table->string('trx_code_order');
             $table->foreignId('product_id');
+            $table->integer('qty')->default(0);
+            $table->double('sub_total')->default(0);
             $table->timestamps();
         });
     }
