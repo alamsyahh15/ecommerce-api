@@ -8,82 +8,60 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
+use App\Models\Role;
+use App\Models\StatusOrder;
+use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    public function checkout(Request $request)
     {
-        //
+
+        try {
+            $validatedData =  $this->validate($request, [
+                'address_id' => ['required', 'numeric'],
+            ]);
+            $order = Order::where('status_shipping', '!=', StatusOrder::COMPLETE)->first();
+            $order->update([
+                'status_shipping' => StatusOrder::PROGRESS,
+                'status' => StatusOrder::PAID,
+                'address_id' => $validatedData['address_id'],
+            ]);
+            return $this->respondWithSuccess([
+                'message' =>  "Checkout Berhasil",
+            ]);
+        } catch (\Exception $e) {
+            report($e);
+
+            return $this->respondError($e->getMessage());
+        }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreOrderRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreOrderRequest $request)
+    public function confirm(Request $request)
     {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Order $order)
-    {
-        //
-    }
+        try {
+            if (auth()->user()->role_id == Role::IS_MERCHANT) {
+                $validatedData =  $this->validate($request, [
+                    'checkout_id' => ['required', 'numeric'],
+                ]);
+                $order = Order::find($validatedData['checkout_id']);
+                $order->update([
+                    'status_shipping' => StatusOrder::COMPLETE,
+                ]);
+                return $this->respondWithSuccess([
+                    'message' =>  "Pesanan telah dikonfirmasi",
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Order $order)
-    {
-        //
-    }
+                ]);
+            } else {
+                return $this->respondError("Unauthenticated");
+            }
+        } catch (\Exception $e) {
+            report($e);
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateOrderRequest  $request
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateOrderRequest $request, Order $order)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Order $order)
-    {
-        //
+            return $this->respondError($e->getMessage());
+        }
     }
 }

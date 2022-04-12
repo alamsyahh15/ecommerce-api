@@ -35,4 +35,9 @@ class Address extends Model
     {
         return $this->belongsTo(Village::class);
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

@@ -17,6 +17,7 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
+            $table->foreignId('address_id')->nullable();
             $table->string('trx_code')->unique();
             $table->integer('status_order')->default(StatusOrder::UNPAID)->comment('1 = Unpaid, 2 = Paid');
             $table->integer('status_shipping')->default(StatusOrder::INITIAL)->comment('1 = Init, 2 = Progress, 3 = Complete');

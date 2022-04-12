@@ -15,6 +15,11 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function address()
+    {
+        return $this->belongsTo(Address::class);
+    }
+
     public function orderProducts()
     {
         return $this->hasMany(OrderProduct::class, 'trx_code_order', 'trx_code');

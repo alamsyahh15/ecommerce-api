@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\DistrictController;
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProvinceController;
 use App\Http\Controllers\Api\RegencyController;
@@ -63,5 +64,14 @@ Route::prefix('cart')->group(function () {
         Route::post('/add', [CartController::class, 'store']);
         Route::post('/update-qty', [CartController::class, 'update']);
         Route::post('/delete', [CartController::class, 'destroy']);
+    });
+});
+
+
+
+Route::prefix('checkout')->group(function () {
+    Route::middleware('auth:users')->group(function () {
+        Route::post('/post', [OrderController::class, 'checkout']);
+        Route::post('/confirm', [OrderController::class, 'confirm']);
     });
 });
